@@ -248,7 +248,7 @@ async function loadIPOs() {
   }
 }
 function showTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['analyse','scanner','portfolio','politics'][i]===name));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['analyse','scanner','portfolio','politics','agents'][i]===name));
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   if(name==='portfolio') renderPortfolio();
