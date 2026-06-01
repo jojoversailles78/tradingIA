@@ -507,6 +507,14 @@ async def upcoming_ipos():
     ipos = await get_upcoming_ipos()
     return {"ipos": ipos, "total": len(ipos)}
 
+
+@app.get("/agents")
+async def agents_page():
+    html = _serve.get_agents_html()
+    if html:
+        return HTMLResponse(html)
+    return HTMLResponse("<h1>Agents</h1><p><a href='/docs'>API</a></p>")
+
 @app.get("/debug")
 async def debug():
     import os
