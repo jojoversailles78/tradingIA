@@ -2,7 +2,7 @@ fastapi==0.110.0
 uvicorn[standard]==0.27.1
 yfinance
 pandas
-pandas-ta
+pandas-ta==0.4.71b0
 numpy
 pydantic-settings
 httpx
