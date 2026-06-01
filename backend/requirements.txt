@@ -8,3 +8,4 @@ pydantic-settings
 httpx
 python-dotenv
 apscheduler
+psycopg2-binary
