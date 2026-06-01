@@ -1,6 +1,7 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from datetime import datetime
 import json, os, asyncio, threading, time
 
@@ -289,8 +290,10 @@ async def upcoming_ipos():
 
 @app.get("/")
 async def root():
-    return FileResponse("html/index.html")
+    html = open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "html", "index.html"), encoding="utf-8").read() if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "html", "index.html")) else "<h1>TradingIA API</h1><p><a href='/docs'>API Docs</a></p>"
+    return HTMLResponse(html)
 
 @app.get("/agent")
 async def agent_page():
-    return FileResponse("html/agent.html")
+    html = open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "html", "agent.html"), encoding="utf-8").read() if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "html", "agent.html")) else "<h1>Agent</h1>"
+    return HTMLResponse(html)
