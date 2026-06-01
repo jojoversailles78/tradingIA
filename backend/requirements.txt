@@ -1,9 +1,9 @@
-fastapi==0.110.0
-uvicorn[standard]==0.27.1
+fastapi
+uvicorn[standard]
 yfinance
-pandas
-pandas-ta==0.4.71b0
-numpy
+pandas>=2.2.3
+pandas-ta>=0.4.71b0
+numpy>=2.2.6
 pydantic-settings
 httpx
 python-dotenv
