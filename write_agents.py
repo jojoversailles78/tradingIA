@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+content = '''from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from datetime import datetime
@@ -524,7 +524,7 @@ async def root():
     html = _serve.get_index_html()
     if html:
         return HTMLResponse(html)
-    return HTMLResponse("<h1>TradingIA</h1><p><a href='/docs'>API Docs</a></p>")
+    return HTMLResponse("<h1>TradingIA</h1><p><a href=\'/docs\'>API Docs</a></p>")
 
 @app.get("/agent")
 async def agent_page():
@@ -532,3 +532,8 @@ async def agent_page():
     if html:
         return HTMLResponse(html)
     return HTMLResponse("<h1>Agents IA</h1>")
+'''
+
+with open('backend/app/main.py', 'w', encoding='utf-8') as f:
+    f.write(content)
+print('OK - main.py avec 6 agents ecrit avec succes - ', len(content), 'chars')

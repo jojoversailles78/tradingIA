@@ -27,3 +27,16 @@ def get_agent_html():
             with open(p, encoding='utf-8') as f:
                 return f.read()
     return None
+def get_agents_html():
+    import os
+    paths = [
+        os.path.join(os.path.dirname(__file__), '..', 'html', 'agents.html'),
+        os.path.join(os.path.dirname(__file__), '..', '..', 'html', 'agents.html'),
+        '/app/html/agents.html',
+        'html/agents.html',
+    ]
+    for p in paths:
+        if os.path.exists(p):
+            with open(p, encoding='utf-8') as f:
+                return f.read()
+    return None
