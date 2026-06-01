@@ -1,3 +1,4 @@
+from app import serve as _serve
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -291,70 +292,33 @@ async def upcoming_ipos():
 
 import os as _os
 
-def _get_html_path(filename):
-    # Chercher le fichier HTML dans plusieurs endroits possibles
-    paths = [
-        _os.path.join(_os.path.dirname(__file__), '..', '..', 'html', filename),
-        _os.path.join(_os.path.dirname(__file__), '..', 'html', filename),
-        _os.path.join('/app', 'html', filename),
-        _os.path.join(_os.getcwd(), 'html', filename),
-        filename,
-    ]
-    for p in paths:
-        if _os.path.exists(p):
-            return p
-    return None
 
-import os as _os
-
-def _get_html_path(filename):
-    # Chercher le fichier HTML dans plusieurs endroits possibles
-    paths = [
-        _os.path.join(_os.path.dirname(__file__), '..', '..', 'html', filename),
-        _os.path.join(_os.path.dirname(__file__), '..', 'html', filename),
-        _os.path.join('/app', 'html', filename),
-        _os.path.join(_os.getcwd(), 'html', filename),
-        filename,
-    ]
-    for p in paths:
-        if _os.path.exists(p):
-            return p
-    return None
-
-import os as _os
-
-def _get_html_path(filename):
-    # Chercher le fichier HTML dans plusieurs endroits possibles
-    paths = [
-        _os.path.join(_os.path.dirname(__file__), '..', '..', 'html', filename),
-        _os.path.join(_os.path.dirname(__file__), '..', 'html', filename),
-        _os.path.join('/app', 'html', filename),
-        _os.path.join(_os.getcwd(), 'html', filename),
-        filename,
-    ]
-    for p in paths:
-        if _os.path.exists(p):
-            return p
-    return None
-
-import os as _os
-
-def _get_html_path(filename):
-    # Chercher le fichier HTML dans plusieurs endroits possibles
-    paths = [
-        _os.path.join(_os.path.dirname(__file__), '..', '..', 'html', filename),
-        _os.path.join(_os.path.dirname(__file__), '..', 'html', filename),
-        _os.path.join('/app', 'html', filename),
-        _os.path.join(_os.getcwd(), 'html', filename),
-        filename,
-    ]
-    for p in paths:
-        if _os.path.exists(p):
-            return p
-    return None
+@app.get("/debug")
+async def debug():
+    import os
+    cwd = os.getcwd()
+    exists = {}
+    for p in ['html/index.html', '../html/index.html', '/app/html/index.html', 'app/html/index.html']:
+        exists[p] = os.path.exists(p)
+    files = []
+    for root, dirs, filenames in os.walk('.'):
+        if len(files) > 30:
+            break
+        for fname in filenames[:5]:
+            files.append(os.path.join(root, fname))
+    return {"cwd": cwd, "exists": exists, "files": files}
 
 @app.get("/")
 async def root():
-    return HTMLResponse("<html><head><meta http-equiv='refresh' content='0;url=/static/index.html'></head></html>")
+    html = _serve.get_index_html()
+    if html:
+        return HTMLResponse(html)
+    return HTMLResponse("<h1>TradingIA API</h1><p><a href='/docs'>Docs</a></p>")
 
+@app.get("/agent")
+async def agent_page():
+    html = _serve.get_agent_html()
+    if html:
+        return HTMLResponse(html)
+    return HTMLResponse("<h1>Agent</h1>")
 
