@@ -320,6 +320,22 @@ def _get_html_path(filename):
             return p
     return None
 
+import os as _os
+
+def _get_html_path(filename):
+    # Chercher le fichier HTML dans plusieurs endroits possibles
+    paths = [
+        _os.path.join(_os.path.dirname(__file__), '..', '..', 'html', filename),
+        _os.path.join(_os.path.dirname(__file__), '..', 'html', filename),
+        _os.path.join('/app', 'html', filename),
+        _os.path.join(_os.getcwd(), 'html', filename),
+        filename,
+    ]
+    for p in paths:
+        if _os.path.exists(p):
+            return p
+    return None
+
 @app.get("/")
 async def root():
     path = _get_html_path('index.html')
