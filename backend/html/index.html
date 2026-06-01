@@ -77,7 +77,6 @@ input[type=text],input[type=number]{background:#1a1a24;border:1px solid #333;bor
   <div class="tab active" onclick="showTab('analyse')">🔍 Analyse</div>
   <div class="tab" onclick="showTab('scanner')">📡 Scanner Marché</div>
   <div class="tab" onclick="showTab('portfolio')">💼 Mon Portefeuille</div>
-<div class="tab" onclick="showTab('portfolio')">💼 Mon Portefeuille</div>
 <div class="tab" onclick="showTab('politics')">🏛️ Congrès & IPO</div>
 </div>
 
@@ -248,7 +247,8 @@ async function loadIPOs() {
   }
 }
 function showTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['analyse','scanner','portfolio','politics','agents'][i]===name));
+  if(name==='agents') { window.location.href='/agents'; return; }
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['analyse','scanner','portfolio','politics'][i]===name));
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   if(name==='portfolio') renderPortfolio();
