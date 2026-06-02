@@ -291,13 +291,17 @@ async def run_agent(agent_id, agent_state, tickers, min_profit_pct=3.0, stop_los
 async def run_all_agents():
     state = load_agents()
     print("Auto-analyse tous agents - {}".format(datetime.utcnow().isoformat()))
+    # Tourner un agent a la fois avec pause entre chaque
     for agent_id in state:
         try:
             actions = await run_agent(agent_id, state[agent_id], ALL_TICKERS)
             print("Agent {} - {} actions".format(agent_id, len(actions)))
+            save_agents(state)
+            # Pause 60 secondes entre chaque agent pour eviter surcharge memoire
+            await asyncio.sleep(60)
         except Exception as e:
             print("Erreur agent {}: {}".format(agent_id, e))
-    save_agents(state)
+            await asyncio.sleep(30)
 
 def scheduler_thread(loop):
     while True:
