@@ -33,6 +33,14 @@ AGENTS = {
 AGENTS_FILE = "agents_state.json"
 
 def load_agents():
+    # Essayer PostgreSQL d abord
+    try:
+        db_state = _db.load_agents_db()
+        if db_state:
+            return db_state
+    except Exception as e:
+        print("DB load error:", e)
+    # Fallback fichier local
     if os.path.exists(AGENTS_FILE):
         with open(AGENTS_FILE, "r") as f:
             return json.load(f)
@@ -59,8 +67,15 @@ def load_agents():
     return state
 
 def save_agents(state):
-    with open(AGENTS_FILE, "w") as f:
-        json.dump(state, f, indent=2, default=str)
+    try:
+        _db.save_agents_db(state)
+    except Exception as e:
+        print("DB save error:", e)
+    try:
+        with open(AGENTS_FILE, "w") as f:
+            json.dump(state, f, indent=2, default=str)
+    except:
+        pass
 
 def compute_strategy_score(strategy, data):
     tech = data.get("technical", {})
@@ -318,6 +333,9 @@ def scheduler_thread(loop):
 
 @app.on_event("startup")
 async def startup():
+    from app import db as _db2
+    db_ok = _db2.init_db()
+    print("PostgreSQL:", "OK" if db_ok else "ERREUR - fallback fichier")
     print("Agents prets - scheduler desactive")
 
 @app.get("/health")
