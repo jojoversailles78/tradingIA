@@ -416,6 +416,22 @@ async def run_single_agent(agent_id: str):
     pos_val = sum(p["qty"] * p["buy_price"] for p in state[agent_id]["positions"].values())
     return {"agent_id": agent_id, "actions": actions, "portfolio_value": state[agent_id]["capital"] + pos_val}
 
+
+@app.post("/api/agents/{agent_id}/run_async")
+async def run_agent_async(agent_id: str, background_tasks: BackgroundTasks):
+    from fastapi import BackgroundTasks
+    state = load_agents()
+    if agent_id not in state:
+        return {"error": "Agent inconnu"}
+    async def do_run():
+        try:
+            actions = await run_agent(agent_id, state[agent_id], ALL_TICKERS)
+            save_agents(state)
+        except Exception as e:
+            print("Background run error:", e)
+    background_tasks.add_task(do_run)
+    return {"status": "started", "agent_id": agent_id}
+
 @app.post("/api/agents/run_all")
 async def run_all():
     await run_all_agents()
