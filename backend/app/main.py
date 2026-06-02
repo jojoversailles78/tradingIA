@@ -318,10 +318,7 @@ def scheduler_thread(loop):
 
 @app.on_event("startup")
 async def startup():
-    loop = asyncio.get_event_loop()
-    t = threading.Thread(target=scheduler_thread, args=(loop,), daemon=True)
-    t.start()
-    print("6 agents demarres - refresh toutes les 15 minutes")
+    print("Agents prets - scheduler desactive")
 
 @app.get("/health")
 async def health():
