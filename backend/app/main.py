@@ -431,7 +431,18 @@ async def run_single_agent(agent_id: str):
     if agent_id not in state:
         return {"error": "Agent inconnu"}
     actions = await run_agent(agent_id, state[agent_id], ALL_TICKERS)
-    save_agents(state)
+    # Sauvegarder SEULEMENT cet agent pour ne pas ecraser les autres
+    try:
+        _db.save_single_agent_db(agent_id, state[agent_id])
+    except Exception as e:
+        print("Save single error:", e)
+    try:
+        full_state = load_agents()
+        full_state[agent_id] = state[agent_id]
+        with open(AGENTS_FILE, "w") as f:
+            json.dump(full_state, f, indent=2, default=str)
+    except:
+        pass
     pos_val = sum(p["qty"] * p["buy_price"] for p in state[agent_id]["positions"].values())
     return {"agent_id": agent_id, "actions": actions, "portfolio_value": state[agent_id]["capital"] + pos_val}
 
